@@ -75,7 +75,7 @@ exports.register = async (data) => {
         const roleId = "R001" // Role default is "R001" - "khách hàng"
 
         // kết quả trả về một array [data: object, created: boolean]
-        const response = await db.user.findOrCreate({
+        const response = await db.users.findOrCreate({
             where: { email }, // tìm thấy email created=false -> Tài khoản đã tồn tại
             // Ko tìm thấy dữ liệu -> created=true -> tạo dữ liệu mới theo defaults -> Đăng ký thành công
             defaults: {
@@ -138,7 +138,7 @@ exports.login = async (data) => {
     try {
         const { email, password } = data
 
-        const response = await db.user.findOne({
+        const response = await db.users.findOne({
             where: { email },
             raw: true, // chuyển instants thành object json
         })
@@ -180,7 +180,7 @@ exports.getCode = async (req) => {
         const code = generateSequenceRandomInteger(6)
         const hashCode = jwt.sign({ code }, process.env.JWT_SECRET, { expiresIn: "10m" })
 
-        const updateCode = await db.user.update(
+        const updateCode = await db.users.update(
             { code_verify: hashCode },
             {
                 where: { email },
@@ -208,7 +208,7 @@ exports.changePassword = async (req) => {
         const password = req.body.password
         const hashPass = hashPassword(password)
 
-        const updatePassword = await db.user.update(
+        const updatePassword = await db.users.update(
             {
                 password: hashPass,
             },
@@ -229,7 +229,7 @@ exports.verifyCode = async (req) => {
         const email = req.body.email
         const code = req.body.code
 
-        const getCode = await db.user.findOne({ where: { email }, attributes: ["code_verify"], raw: true })
+        const getCode = await db.users.findOne({ where: { email }, attributes: ["code_verify"], raw: true })
         const decoded = jwt.verify(getCode.code_verify, process.env.JWT_SECRET, (err, decoded) => {
             if (err) return err
             return decoded
