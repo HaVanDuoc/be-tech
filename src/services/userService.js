@@ -256,7 +256,7 @@ exports.deleteUser = async (userId) => {
 exports.searchUser = async (req) => {
     try {
         const key = req.body.key
-        const limit = req.body.limit || 3
+        // const limit = req.body.limit || 3
 
         if (!key) return { err: 0, msg: "Vui lòng nhập thông tin người dùng muốn tìm kiếm!" }
 
@@ -282,6 +282,7 @@ exports.searchUser = async (req) => {
                                 )
                             )
                         ) as fullName,
+                        users.avatar,
                         users.phoneNumber,
                         users.address,
                         users.dateOfBirth,
@@ -301,9 +302,7 @@ exports.searchUser = async (req) => {
                 or u.address like N'%${key || ""}%'
                 or u.gender like N'%${key || ""}%'
             order by 
-                u.createdAt desc
-            limit 
-                ${limit};
+                u.createdAt desc;
         `)
 
         return {
