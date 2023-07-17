@@ -11,6 +11,7 @@ const {
     handleAddProduct,
     handleDelete,
     createOrderAdmin,
+    paymentOrder,
 } = require("../controllers/orderController")
 const verifyToken = require("../middleware/verifyToken")
 const verifyRole = require("../middleware/verifyRole")
@@ -27,6 +28,7 @@ router.use(verifyToken)
 
 router.post("/destroyOrder", destroyOrder)
 router.post("/createOrder", createOrder)
+router.post("/payment", paymentOrder)
 router.post("/handleOrderStatus", handleOrderStatus)
 router.post("/orderDetails/increase", handleIncrease)
 router.post("/orderDetails/decrease", handleDecrease)
